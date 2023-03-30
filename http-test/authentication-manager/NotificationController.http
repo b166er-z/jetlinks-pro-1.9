@@ -1,0 +1,50 @@
+
+### 获取支持的订阅类型
+GET {{host}}/notifications/providers
+X-Access-Token: {{token}}
+
+### 添加，编辑订阅
+
+PATCH {{host}}/notifications/subscribe
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+
+  "subscribeName": "订阅名称，用户输入",
+  "topicProvider": "device_alarm",
+  "topicConfig": {
+    "productId": "*",
+    "deviceId": "*",
+    "alarmId": "*"
+  }
+}
+
+### 查询订阅列表
+GET {{host}}/notifications/subscriptions/_query
+X-Access-Token: {{token}}
+
+
+###  取消订阅
+PUT {{host}}/notifications/subscription/1283656437422546944/_disabled
+X-Access-Token: {{token}}
+
+###  开启订阅
+PUT {{host}}/notifications/subscription/1283656437422546944/_enabled
+X-Access-Token: {{token}}
+
+### 删除订阅
+DELETE {{host}}/notifications/subscription/1283656437422546944
+X-Access-Token: {{token}}
+
+
+### 查询通知
+
+GET {{host}}/notifications/_query
+X-Access-Token: {{token}}
+
+
+### 查看通知
+GET {{host}}/notifications/1283664641574584320/read
+X-Access-Token: {{token}}
+

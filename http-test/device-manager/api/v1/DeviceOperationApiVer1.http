@@ -1,0 +1,8 @@
+###
+POST {{host}}/api/v1/device/test0/function/playVoice
+Content-Type: application/json
+X-Access-Token: {{token}}
+
+{
+  "text": "声音文本"
+}

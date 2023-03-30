@@ -1,0 +1,38 @@
+<script type="text/html" data-help-name="reactor-ql">
+    <p>通过SQL的方式来订阅消息流并处理数据。</p>
+    <p>通过SQL处理后的数据将转发到下游节点中。</p>
+    <p>支持标准SQL语法，支持常用数学函数，支持case when等逻辑判断。</p>
+    <p>如果数据是从上游节点中来,则SQL中的主表名是无效的。这时表名使用<code>dual</code>即可</p>
+    <p>当处理实时数据聚合计算时,请使用<code>_window</code>或者<code>interval</code>函数。</p>
+    <p>如果是分组聚合处理，在集群时，调度规则请选择<code>最小负载</code>。</p>
+    <h3>例</h3>
+    <p>订阅设备上报的属性并判断值</p>
+    <code>
+       <pre>
+select
+this.deviceId deviceId
+,this.properties.temp temp
+from "/device/*/*/message/property/report"
+where this.properties.temp > 40
+       </pre>
+    </code>
+
+    <p>计算每5分钟的平均值</p>
+    <code>
+       <pre>
+select
+avg(this.properties.temp) temp
+from "/device/*/*/message/property/report"
+group by interval('5m')
+having temp > 40
+       </pre>
+    </code>
+    <h3>自定义函数列表</h3>
+    <ul>
+        <li>device.properties(deviceId) 获取设备属性</li>
+    </ul>
+    <p>请参见<a target="_blank" href="http://doc.jetlinks.cn/best-practices/rule-engine-sql.html#sql%E4%BE%8B%E5%AD%90">
+        在线文档</a>来获得更多有关ReactorQL的信息。</p>
+
+
+</script>

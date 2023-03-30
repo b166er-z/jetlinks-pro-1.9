@@ -1,0 +1,8 @@
+## 固件升级历史记录管理
+
+### 分页查询升级记录
+GET {{host}}/firmware/upgrade/history/_query?terms%5B0%5D.column=firmwareId&terms%5B0%5D.value=1269883234104659968&terms%5B1%5D.column=taskName%24LIKE&terms%5B1%5D.value=%25aa%25&pageSize=1
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+###

@@ -1,0 +1,40 @@
+GET {{host}}/user/detail
+X-Access-Token: {{token}}
+
+
+### 保存
+PUT {{host}}/user/detail
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "name": "测试",
+  "email": "邮件",
+  "avatar": "头像",
+  "telephone": "联系电话",
+  "description": "说明"
+}
+
+### 修改用户名密码
+
+PUT {{host}}/user/passwd
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "oldPassword": "test",
+  "newPassword": "test"
+}
+
+###
+POST http://localhost:9000/jetlinks/authorize/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin",
+  "expires": 3600000,
+  "tokenType": "default",
+  "verifyCode": "UN8TE",
+  "verifyKey": "e45d80e4-d256-46ba-b80c-18cbb439966b"
+}

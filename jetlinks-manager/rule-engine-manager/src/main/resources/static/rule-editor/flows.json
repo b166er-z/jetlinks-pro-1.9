@@ -1,0 +1,89 @@
+{
+  "flows": [
+    {
+      "id": "5cccc742.296078",
+      "type": "tab",
+      "label": "流程1",
+      "disabled": false,
+      "info": ""
+    },
+    {
+      "id": "3ff6a83b.376458",
+      "type": "function",
+      "z": "5cccc742.296078",
+      "name": "处理数据",
+      "func": "\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 480,
+      "y": 300,
+      "wires": [
+        [
+          "f33ce829.bc5fb8"
+        ]
+      ]
+    },
+    {
+      "id": "8ba7a340.5bd46",
+      "type": "catch",
+      "z": "5cccc742.296078",
+      "name": "",
+      "scope": [
+        "4bd639a6.f95c98"
+      ],
+      "uncaught": false,
+      "x": 260,
+      "y": 320,
+      "wires": [
+        [
+          "3ff6a83b.376458"
+        ]
+      ]
+    },
+    {
+      "id": "f33ce829.bc5fb8",
+      "type": "notify",
+      "z": "5cccc742.296078",
+      "notifyType": "sms",
+      "notifierId": "1269964495473266688",
+      "provider": "test",
+      "templateId": "1247405118930354176",
+      "name": "",
+      "x": 680,
+      "y": 340,
+      "wires": [
+        []
+      ]
+    },
+    {
+      "id": "4bd639a6.f95c98",
+      "type": "tcp request",
+      "z": "5cccc742.296078",
+      "server": "",
+      "port": "",
+      "out": "time",
+      "splitc": "0",
+      "name": "发起TCP请求",
+      "x": 450,
+      "y": 140,
+      "wires": [
+        []
+      ]
+    },
+    {
+      "id": "f16ee133.df70d",
+      "type": "timer",
+      "z": "5cccc742.296078",
+      "name": "每10秒",
+      "cron": "0/10 * * * * ?",
+      "x": 240,
+      "y": 140,
+      "wires": [
+        [
+          "4bd639a6.f95c98"
+        ]
+      ]
+    }
+  ],
+  "rev": "568365961cf5472a2fd982f15b61cab4"
+}

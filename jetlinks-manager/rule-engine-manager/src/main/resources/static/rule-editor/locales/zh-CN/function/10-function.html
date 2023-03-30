@@ -1,0 +1,98 @@
+<script type="text/html" data-help-name="function">
+    <p>使用脚本来处理规则数据流中的数据。</p>
+    <p>脚本使用<code>jsr223</code>引擎，默认使用javascript语言。</p>
+    <p>通过调用内置变量<code>handler.onMessage</code>注册消息监听函数,当上游产生数据时,此函数将被调用,并传入数据.</p>
+    <p>例如:</p>
+    <code>
+        <pre>var ctx = context;
+handler.onMessage(function(ruleData){
+
+var data = ruleData.data; //上游节点的输出
+
+return { // 输出到下一个节点
+        "key":"value"
+    }
+});
+        </pre>
+    </code>
+
+    <p>通过指定输出数量值,可以控制输出到指定的节点,如:</p>
+    <code>
+        <pre>var ctx = context;
+handler.onMessage(function(ruleData){
+
+return [
+    {"to":"node1"}, //输出到第一个节点
+    {"to":"node2"}  //输出到第二个节点
+    ];
+
+});</pre>
+    </code>
+
+    <h3>作用域</h3>
+
+    <p>你还可以通过上下文作用域保存,获取数据.</p>
+    <code>
+        <pre>var ctx = context;
+handler.onMessage(function(ruleData){
+
+var data = ruleData.data;
+
+return ctx.node()
+        .counter()
+        .inc(data.value) // 获取当前节点的计数器并递增
+        .map(function(i){
+           return {
+              "total":i;
+           }
+        })</pre>
+    </code>
+
+    <p>作用域</p>
+    <ul>
+        <li><code>ctx.scope(String id)</code>或者<code>ctx.scope(RuleData ruleData)</code>上下文作用域,根据<code>ruleData.contextId</code>决定.</li>
+        <li><code>ctx.node()</code>当前节点作用域</li>
+        <li><code>ctx.node(String id)</code>指定节点作用域</li>
+        <li><code>ctx.flow()</code>当前流程作用域</li>
+        <li><code>ctx.flow(String id)</code>指定流程作用域</li>
+        <li><code>ctx.flow(String id).node(String id)</code>指定流程指定节点的作用域</li>
+        <li><code>ctx.global()</code>全局作用域</li>
+    </ul>
+    <p>作用域支持方法:</p>
+
+    <ul>
+        <li><code>.all(String... key)</code>获取指定key的数据,如果未指定这返回全部,类型为Mono&lt;Map&lt;String,Object&gt;&gt;</li>
+        <li><code>.get(String key)</code>获取指定key的数据,返回类型为Mono&lt;Object&gt;</li>
+        <li><code>.put(String key,Object value)</code>设置值,返回类型为Mono&lt;Void&gt;</li>
+        <li><code>.putAll(Map&lt;String,Object&gt;)</code>设置多个值,参数为Map,返回类型为Mono&lt;Void&gt</li>
+        <li><code>.clear()</code>清空作用域,返回类型为Mono&lt;Void&gt</li>
+        <li><code>.counter()</code>获取计数器</li>
+        <li><code>.counter(String name)</code>获取指定名字的计数器</li>
+        <li><code>.counter().inc(double number)</code>计数器递增,返回最新值:Mono&lt;Double&gt</li>
+        <li><code>.counter().dec(double number)</code>计数器递减,返回最新值:Mono&lt;Double&gt</li>
+        <li><code>.counter().getAndSet(double number)</code>获取最新值后设置新的值,返回:Mono&lt;Double&gt</li>
+        <li><code>.counter().setAndGet(double number)</code>设置最新值后返回最新的值,返回:Mono&lt;Double&gt</li>
+    </ul>
+
+    <p><b>特别注意: 作用域的返回值均是<a target="_blank" href="https://projectreactor.io/docs/core/release/reference/docs/index.html">reactor</a>的API
+        ,注意将操作组合成一个流后返回,如:</b></p>
+
+    <code><pre>return ctx
+   .node()
+   .set("tmp",val)
+   .thenReturn({"success":true})</pre>
+    </code>
+    <h3>日志输出和错误处理</h3>
+    <p>使用以下功能输出日志：</p>
+    <ul>
+        <li><code>ctx.getLogger().debug("Log message {}",data);</code></li>
+        <li><code>ctx.getLogger().warn("Warning");</code></li>
+        <li><code>ctx.getLogger().error("Error");</code></li>
+    </ul>
+    <p>使用以下功能触发错误：</p>
+
+    <ul>
+        <li><code>throw new Error("错误");</code></li>
+        <li><code>throw new java.lang.RuntimeException("错误");</code></li>
+    </ul>
+</script>

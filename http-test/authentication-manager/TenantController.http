@@ -1,0 +1,72 @@
+POST {{host}}/tenant/_create
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "name": "测试",
+  "username": "test2",
+  "password": "test2"
+}
+
+### 保存租户
+PATCH {{host}}/tenant
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "id": "test",
+  "name": "测试租户"
+}
+
+
+### 获取当前租户下的所有成员信息
+
+GET {{host}}/tenant/members
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+
+### 绑定资产
+
+POST {{host}}/tenant/test/assets/_bind
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+[
+  {
+    "userId": "1267745293025710080",
+    "assetType": "device",
+    "allPermission": true,
+    "assetIdList": [
+      "demo-b-20000"
+    ]
+  }
+]
+
+### 解绑资产
+POST {{host}}/tenant/assets/_unbind
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+[
+  {
+    "userId": "1238054497957978112",
+    "assetType": "device",
+    "assetIdList": [
+      "test1",
+      "test2"
+    ]
+  }
+]
+
+
+### 查询资产详情
+
+GET {{host}}/tenant/detail/_query?terms[0].column=name&terms[0].value=测试555
+X-Access-Token: {{token}}
+
+
+### 查询资产成员信息
+
+GET {{host}}/tenant/test/asset/device/demo-b-20000/members
+X-Access-Token: {{token}}

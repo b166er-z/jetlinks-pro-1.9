@@ -1,0 +1,40 @@
+## 协议管理
+
+### 分页查询协议列表
+GET {{host}}/protocol/_query?pageSize=10
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 取消协议发布
+POST {{host}}/protocol/1207848645684355072/_un-deploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 协议发布
+POST {{host}}/protocol/1207848645684355072/_deploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 协议支持类型
+GET {{host}}/protocol/providers
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 新增/修改协议
+POST {{host}}/protocol/
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "id":"1207848645684355072",
+  "name":"JetLinks官方协议",
+  "type":"jar",
+  "configuration": {
+    "provider":"org.jetlinks.protocol.JetLinksProtocolSupportProvider",
+    "location":"http://2.jetlinks.org:9000/upload/20200103/1212940459305893888.jar"
+     },
+  "description":""
+}
+
+###
+

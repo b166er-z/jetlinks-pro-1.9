@@ -1,0 +1,56 @@
+## 固件升级任务管理
+
+### 分页查询固件升级任务
+GET {{host}}/firmware/upgrade/task/_query?pageSize=10&terms%5B0%5D.column=firmwareId&terms%5B0%5D.value=1269883234104659968
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+###
+POST {{host}}/firmware/upgrade/task
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "name":"test",
+  "timeoutSeconds":"12",
+  "mode":"pull",
+  "productId":"shoushuijiv1",
+  "firmwareId":"1269883234104659968"
+}
+
+### 发布任务(所有设备)
+POST {{host}}/firmware/upgrade/task/1269898326959476736/all/_deploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 发布设备（选中设备）
+POST {{host}}/firmware/upgrade/task/1269898326959476736/_deploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+["105d8ff363837585043187933"]
+
+### 查询等待升级设备数量
+GET {{host}}/firmware/upgrade/history/_count?terms%5B0%5D.column=taskId&terms%5B0%5D.value=1269898326959476736&terms%5B1%5D.column=state&terms%5B1%5D.value=waiting
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 查询升级中设备数量
+GET {{host}}/firmware/upgrade/history/_count?terms%5B0%5D.column=taskId&terms%5B0%5D.value=1269898326959476736&terms%5B1%5D.column=state&terms%5B1%5D.value=processing
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 查询升级完成设备数量
+GET {{host}}/firmware/upgrade/history/_count?terms%5B0%5D.column=taskId&terms%5B0%5D.value=1269898326959476736&terms%5B1%5D.column=state&terms%5B1%5D.value=success
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 查询升级失败设备数量
+GET {{host}}/firmware/upgrade/history/_count?terms%5B0%5D.column=taskId&terms%5B0%5D.value=1269898326959476736&terms%5B1%5D.column=state&terms%5B1%5D.value=failed
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 删除固件升级任务
+DELETE {{host}}/firmware/upgrade/task/1269898326959476736
+X-Access-Token: {{token}}
+Content-Type: application/json

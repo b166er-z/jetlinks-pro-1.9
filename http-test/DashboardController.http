@@ -1,0 +1,48 @@
+
+
+
+#
+
+POST {{host}}/dashboard/_multi
+Content-Type: application/json
+X-Access-Token: {{token}}
+
+
+[
+  {
+    "dashboard": "device",
+    "object": "message",
+    "measurement": "quantity",
+    "dimension": "agg",
+    "group": "sameDay",
+    "params": {
+      "time": "1d",
+      "format": "yyyy-MM-dd"
+    }
+  },
+  {
+    "dashboard": "device",
+    "object": "message",
+    "measurement": "quantity",
+    "dimension": "agg",
+    "group": "sameMonth",
+    "params": {
+      "limit": 30,
+      "time": "1d",
+      "format": "yyyy-MM-dd",
+      "from": "2020-06-29 00:00:00"
+    }
+  },
+  {
+    "dashboard": "device",
+    "object": "message",
+    "measurement": "quantity",
+    "dimension": "agg",
+    "group": "month",
+    "params": {
+      "time": "1M",
+      "format": "yyyy-MM-dd",
+      "from": "2020-06-29 00:00:00"
+    }
+  }
+]

@@ -1,0 +1,18 @@
+<script type="text/x-red" data-help-name="mqtt in">
+    <p>连接到MQTT代理并订阅来自指定主题的消息。</p>
+    <h3>输出</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">字符串 | buffer</span></dt>
+        <dd>如果不是二进制buffer的话就是字符串</dd>
+        <dt>topic <span class="property-type">字符串</span></dt>
+        <dd>MQTT主题，使用<code>/</code>作为层次结构分隔符。</dd>
+        <dt>qos <span class="property-type">数值</span> </dt>
+        <dd>QoS服务质量：0, 最多一次； 1, 最少一次； 2, 只一次。</dd>
+        <dt>retain <span class="property-type">布尔值</span></dt>
+        <dd>值为true时表示消息已保留且可能是旧的。</dd>
+    </dl>
+    <h3>详细</h3>
+    <p>订阅主题可以包括MQTT通配符（+：一个级别，＃：多个级别）。</p>
+    <p>使用该节点您首先需要建立与MQTT代理的连接。通过先到网络组件中添加MQTT客户端。</p>
+    <p>如有需要，几个MQTT节点（输入或输出）可以共享相同的连接。</p>
+</script>

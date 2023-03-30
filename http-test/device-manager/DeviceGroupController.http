@@ -1,0 +1,32 @@
+## 设备分组管理
+
+### 分页查询分组
+GET {{host}}/device/group/_query/_detail?pageSize=8
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 新建设备组
+POST {{host}}/device/group
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{"id":"aaaa","name":"aaaaa","description":"aa"}
+
+### 绑定设备
+POST {{host}}/device/group/aaaa/_bind
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+["105d8ff363837585043187933"]
+
+### 解绑设备
+POST {{host}}/device/group/aaaa/_unbind
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 解绑所有设备
+POST {{host}}/device/group/aaaa/_unbind/all
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+###

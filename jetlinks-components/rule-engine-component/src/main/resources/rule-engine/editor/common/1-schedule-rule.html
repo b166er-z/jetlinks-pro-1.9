@@ -1,0 +1,68 @@
+<script type="text/html" data-template-name="schedule-rule">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span>名称</span></label>
+        <input type="text" id="node-input-name" placeholder="规则名称">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-scheduleType"><i class="fa fa-server"></i> <span>调度规则</span></label>
+        <select id="node-input-scheduleType" style="display: inline-block; position: relative; width: 70%;"></select>
+    </div>
+
+
+</script>
+
+<script type="text/javascript">
+    (function () {
+        var types = [
+            {
+                "id": "all", "name": "全部可用的节点"
+            },
+            {
+                "id": "min_load", "name": "最小负载的节点"
+            },
+            {
+                "id": "fixed", "name": "指定固定的节点"
+            }
+        ];
+        var typeMap = {};
+        $(types).each(function () {
+            typeMap[this.id] = this;
+        });
+        RED.nodes.registerType('schedule-rule', {
+            category: 'config',
+            name: "调度规则",
+            color: "#E6E0F8",
+            defaults: {
+                name: {value: ""},
+                scheduleType: {value: "all"},
+                configuration: {
+                    value: "", required: true
+                }
+            },
+            inputs: 0,
+            outputs: 0,
+            icon: "timer.svg",
+            label: function () {
+                return this.name || typeMap[this.scheduleType].name;
+            },
+            labelStyle: function () {
+                return this.name ? "node_label_italic" : "";
+            },
+            oneditprepare: function () {
+                var me = this;
+                console.log(me)
+                var typeEl = $("#node-input-scheduleType");
+
+                $(types).each(function () {
+                    typeEl.append($("<option>").val(this.id).text(this.name));
+                });
+
+                typeEl.val(me.scheduleType).change();
+            },
+            oneditsave: function () {
+                this.scheduleType = $("#node-input-scheduleType").val();
+            }
+        });
+    })()
+</script>

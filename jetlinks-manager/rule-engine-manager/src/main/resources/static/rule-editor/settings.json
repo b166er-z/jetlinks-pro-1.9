@@ -1,0 +1,20 @@
+{
+  "httpNodeRoot": "/",
+  "version": "1.0.6",
+  "context": {
+    "default": "memory",
+    "stores": [
+      "memory"
+    ]
+  },
+  "flowEncryptionType": "system",
+  "tlsConfigDisableLocalFiles": false,
+  "editorTheme": {
+    "projects": {
+      "enabled": false
+    },
+    "languages": [
+      "zh-CN"
+    ]
+  }
+}

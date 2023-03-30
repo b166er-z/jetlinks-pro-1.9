@@ -1,0 +1,93 @@
+{
+  "flows": [
+    {
+      "id": "5cccc742.296078",
+      "type": "tab",
+      "label": "流程1",
+      "disabled": false,
+      "info": ""
+    },
+    {
+      "id": "1fdd0449.04edfc",
+      "type": "status",
+      "z": "5cccc742.296078",
+      "name": "",
+      "scope": null,
+      "x": 330,
+      "y": 260,
+      "wires": [
+        [
+          "3ff6a83b.376458"
+        ]
+      ]
+    },
+    {
+      "id": "3ff6a83b.376458",
+      "type": "function",
+      "z": "5cccc742.296078",
+      "name": "",
+      "func": "\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 620,
+      "y": 220,
+      "wires": [
+        []
+      ]
+    },
+    {
+      "id": "b6d754da.67ff38",
+      "type": "delay",
+      "z": "5cccc742.296078",
+      "name": "",
+      "pauseType": "delay",
+      "timeout": "5",
+      "timeoutUnits": "seconds",
+      "rate": "1",
+      "nbRateUnits": "1",
+      "rateUnits": "second",
+      "randomFirst": "1",
+      "randomLast": "5",
+      "randomUnits": "seconds",
+      "drop": false,
+      "x": 340,
+      "y": 120,
+      "wires": [
+        [
+          "84cd73e5.536ba"
+        ]
+      ]
+    },
+    {
+      "id": "84cd73e5.536ba",
+      "type": "mqtt out",
+      "z": "5cccc742.296078",
+      "name": "",
+      "topic": "",
+      "qos": "",
+      "retain": "",
+      "broker": "",
+      "x": 600,
+      "y": 120,
+      "wires": []
+    },
+    {
+      "id": "8ba7a340.5bd46",
+      "type": "catch",
+      "z": "5cccc742.296078",
+      "name": "",
+      "scope": [
+        "84cd73e5.536ba"
+      ],
+      "uncaught": false,
+      "x": 320,
+      "y": 320,
+      "wires": [
+        [
+          "3ff6a83b.376458"
+        ]
+      ]
+    }
+  ],
+  "rev": "568365961cf5472a2fd982f15b61cab4"
+}

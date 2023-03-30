@@ -1,0 +1,41 @@
+version: '2'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      TZ: Asia/Shanghai
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+      - "9999:9999"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      JMX_PORT: 9999
+      TZ: Asia/Shanghai
+    links:
+      - zookeeper:zookeeper
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    links:
+      - zookeeper:zookeeper
+      - kafka:kafka
+    ports:
+      - "9001:9000"
+    environment:
+      ZK_HOSTS: zookeeper:2181
+      TZ: Asia/Shanghai
+  kafka-eagle:
+    image: gui66497/kafka_eagle
+    depends_on:
+      - kafka
+    ports:
+      - "9002:8048"
+    environment:
+      ZKSERVER: "zookeeper:2181"
+    links:
+      - zookeeper
+      - kafka

@@ -1,0 +1,35 @@
+{
+    "ledId": "LED设备ID",
+    "freq": 3,
+    "metadata": [
+        {
+            "productId": "产品ID",
+            "deviceId" : "设备ID",
+            "deviceName": "设备名称",
+            "props" : [
+                {
+                    "id": "参数ID",
+                    "name": "参数名称",
+                    "pos": "显示位置"
+                },
+                {
+                    "id": "参数ID",
+                    "name": "参数名称",
+                    "pos": "显示位置"
+                }
+            ]
+        },
+        {
+            "productId": "产品ID",
+            "deviceId" : "设备ID",
+            "deviceName": "设备名称",
+            "props" : [
+                {
+                    "id": "参数ID",
+                    "name": "参数名称",
+                    "pos": "显示位置"
+                }
+            ]
+        }
+    ]
+}

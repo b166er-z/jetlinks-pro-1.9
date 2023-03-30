@@ -1,0 +1,22 @@
+{
+    "id" : "289C6E2ECFE40",
+    "name" : "演示设备",
+    "describe" : "",
+    "messageProtocol" : "mqtt-protocol",
+    "metadata" : "{\"properties\":[{\"id\":\"temp\",\"name\":\"温度\",\"dataType\":\"float\",\"valueType\":{\"unit\":\"celsiusDegrees\",\"type\":\"float\"},\"expands\":{\"readOnly\":\"true\"}]}",
+    "transportProtocol" : "MQTT",
+    "deviceType" : {
+        "text" : "设备",
+        "value" : "mqttx模拟设备"
+    },
+    "configuration" : {
+        "username" : "test",
+        "password" : "test"
+    },
+    "state" : 0,
+    "creatorId" : "admin",
+    "createTime" : 1579265291769,
+    "orgId" : "",
+    "_id" : 3,
+    "_uid" : 3
+}

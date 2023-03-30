@@ -1,0 +1,4 @@
+
+
+GET {{host}}/rule-engine/model/workers
+X-Access-Token: {{token}}

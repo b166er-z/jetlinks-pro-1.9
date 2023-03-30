@@ -1,0 +1,25 @@
+<script type="text/html" data-help-name="device-gateway">
+    <p>通过此节点用来接入设备以及下发设备指令。</p>
+    <h3>输入</h3>
+    <p>输入参数将作为已经解码的消息进行处理，如:
+    <code>
+        <pre>{
+"messageType":"ONLINE",
+"deviceId":"test-device"
+}</pre>
+    </code>
+        完整的消息列表请:<a href="http://doc.jetlinks.cn/basics-guide/protocol-support.html#%E5%B9%B3%E5%8F%B0%E7%BB%9F%E4%B8%80%E6%B6%88%E6%81%AF%E5%AE%9A%E4%B9%89"
+                    target="_blank">查看文档</a>
+    </p>
+    <h4>行为</h4>
+    <p>收到<code>ONLINE</code>消息时,设备将保持在线状态.之后从平台下发到设备的指令,将会在此节点输出.</p>
+    <p>收到<code>OFFLINE</code>消息时,设备状态将变更为离线.之后无法从平台接收指令下发.</p>
+    <p>其他消息,将使用平台默认的处理逻辑进行处理.</p>
+
+    <h3>输出</h3>
+    <p>在网关收到平台下发给设备指令时，对应的消息将从此节点输出，可以通过处理这些消息来给设备发送指令。</p>
+
+    <h3>其他说明</h3>
+    <p>当超时后未收到任何消息时,设备将自动离线.可通过修改超时时间来指定何时超时.</p>
+
+</script>

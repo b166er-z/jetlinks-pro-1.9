@@ -1,0 +1,31 @@
+POST {{host}}/api/v1/geo/object/_search
+Content-Type: application/json
+X-Access-Token: {{token}}
+
+{
+  "shape": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        100.6347,
+        34.3797
+      ],
+      [
+        105.4687,
+        35.0299
+      ]
+    ]
+  }
+}
+
+### 如果目标对象是线，需要指定relation
+POST {{host}}/api/v1/geo/object/_search
+Content-Type: application/json
+X-Access-Token: {{token}}
+
+{
+  "shape": {
+     "objectId": "line001",
+     "relation": "intersects"
+  }
+}

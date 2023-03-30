@@ -1,0 +1,29 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-help-name="delay">
+    <p>对通过节点的消息进行延迟发送或对消息速率进行限制。</p>
+    <h3>输入</h3>
+    <dl class="message-properties">
+        <dt class="optional">delay <span class="property-type">数值</span></dt>
+        <dd>设置要应用于消息的延迟（以毫秒为单位）。仅当节点配置为允许消息去覆盖配置的默认延迟间隔时，此选项才适用。</dd>
+    </dl>
+    <h3>详细</h3>
+    <p>当配置为延迟发送消息时，延迟间隔可以是一个固定值，一个范围内的随机值或为每个消息动态设置。</p>
+<!--    <p>当配置为对消息进行限制时，它们的传递将分散在配置的时间段内。状态显示队列中当前的消息数。可以选择在中间消息到达时丢弃它们。</p>-->
+    <p>速率限制可以应用于所有消息，也可以根据表达式来分组。超过速率限制的消息将会被自动丢弃。</p>
+    <p>如果设置了触发失败事件，当有消息被丢弃时，将触发失败，可以通过捕获错误节点来处理这些被丢弃的消息。</p>
+</script>

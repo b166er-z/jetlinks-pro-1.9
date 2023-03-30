@@ -1,0 +1,179 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/html" data-template-name="mqtt in">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-clientId"><i class="fa fa-globe"></i> <span
+                data-i18n="mqtt.label.broker"></span></label>
+        <!--        <input type="text" id="node-input-broker">-->
+        <select id="node-input-clientId" style="width:70%;">
+        </select>
+
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> <span data-i18n="common.label.topic"></span></label>
+        <input type="text" id="node-input-topic" data-i18n="[placeholder]common.label.topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-qos"><i class="fa fa-empire"></i> <span data-i18n="mqtt.label.qos"></span></label>
+        <select id="node-input-qos" style="width:125px !important">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-datatype"><i class="fa fa-sign-out"></i> <span
+                data-i18n="mqtt.label.output"></span></label>
+        <select id="node-input-datatype" style="width:70%;">
+<!--            <option value="auto" data-i18n="mqtt.output.auto"></option>-->
+            <option value="BINARY" data-i18n="mqtt.output.buffer"></option>
+            <option value="STRING" data-i18n="mqtt.output.string"></option>
+            <option value="JSON" data-i18n="mqtt.output.json"></option>
+<!--            <option value="base64" data-i18n="mqtt.output.base64"></option>-->
+        </select>
+    </div>
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mqtt in', {
+        category: 'network',
+        name:"订阅MQTT",
+        defaults: {
+            clientId:{value: "", required: true},
+            name: {value: ""},
+            topic: {
+                value: "",
+                required: true,
+                validate: RED.validators.regex(/^(#$|(\+|[^+#]*)(\/(\+|[^+#]*))*(\/(\+|#|[^+#]*))?$)/)
+            },
+            qos: {value: "0"},
+            datatype: {value: "JSON", required: true}
+        },
+        color: "#d8bfd8",
+        inputs: 0,
+        outputs: 1,
+        icon: "bridge.svg",
+        label: function () {
+            return this.name || this.topic || "订阅MQTT";
+        },
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
+        },
+        oneditsave: function () {
+            this.networkId = $("#node-input-broker-id").val();
+        },
+        oneditprepare: function () {
+            var me = this;
+            $.ajax({
+                url: RED.settings.apiBaseUrl + "/network/config/_query/no-paging?paging=false&where=type=MQTT_CLIENT"
+            }).then(function (res) {
+                if (res.result) {
+                    $(res.result).each(function () {
+                        $("#node-input-clientId").append($("<option>").val(this.id).text(this.name))
+                    })
+                }
+                $("#node-input-clientId").val(me.clientId);
+            })
+            if (this.qos === undefined) {
+                $("#node-input-qos").val("0");
+            }
+            if (this.datatype === undefined) {
+                $("#node-input-datatype").val("auto");
+            }
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mqtt out">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-clientId"><i class="fa fa-globe"></i> <span
+                data-i18n="mqtt.label.broker"></span></label>
+        <select id="node-input-clientId" style="width:70%;">
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> <span data-i18n="common.label.topic"></span></label>
+        <input type="text" id="node-input-topic" data-i18n="[placeholder]common.label.topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-qos"><i class="fa fa-empire"></i> <span data-i18n="mqtt.label.qos"></span></label>
+        <select id="node-input-qos" style="width:125px !important">
+            <option value=""></option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+        &nbsp;&nbsp;<i class="fa fa-history"></i>&nbsp;<span data-i18n="mqtt.retain"></span> &nbsp;<select
+            id="node-input-retain" style="width:125px !important">
+        <option value=""></option>
+        <option value="false" data-i18n="mqtt.false"></option>
+        <option value="true" data-i18n="mqtt.true"></option>
+    </select>
+    </div>
+
+    <div class="form-tips"><span data-i18n="mqtt.tip"></span></div>
+
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mqtt out', {
+        category: 'network',
+        name:"推送MQTT",
+        defaults: {
+            name: {value: ""},
+            topic: {value: ""},
+            qos: {value: ""},
+            retain: {value: ""},
+            clientId: {value: "", required: true}
+        },
+        color: "#d8bfd8",
+        inputs: 1,
+        outputs: 0,
+        icon: "bridge.svg",
+        align: "right",
+        label: function () {
+            return this.name || this.topic || "推送MQTT";
+        },
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
+        },
+        oneditsave: function () {
+            this.clientId = $("#node-input-clientId").val();
+        },
+        oneditprepare: function () {
+            let me = this;
+            $.ajax({
+                url: RED.settings.apiBaseUrl + "/network/config/_query/no-paging?paging=false&where=type=MQTT_CLIENT"
+            }).then(function (res) {
+                if (res.result) {
+                    $(res.result).each(function () {
+                        $("#node-input-clientId").append($("<option>").val(this.id).text(this.name))
+                    })
+                }
+                $("#node-input-clientId").val(me.clientId);
+            })
+        }
+    });
+</script>

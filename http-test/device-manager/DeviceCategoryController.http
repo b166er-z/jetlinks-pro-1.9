@@ -1,0 +1,8 @@
+## 设备类型管理
+
+### 查询所有设备类别
+GET {{host}}/device/category/_tree
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+###

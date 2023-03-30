@@ -1,0 +1,21 @@
+### 查看规则实例任务信息
+
+GET {{host}}/rule-engine/instance/5cccc742.296078/tasks
+X-Access-Token: {{token}}
+
+###
+GET {{host}}/rule-engine/instance/5cccc742.296078/nodes
+X-Access-Token: {{token}}
+
+### 启动流程,重复执行将重新加载
+
+POST {{host}}/rule-engine/instance/5cccc742.296078/_start
+X-Access-Token: {{token}}
+
+### 查询规则事件
+GET  {{host}}/rule-engine/instance/5cccc742.296078/events
+X-Access-Token: {{token}}
+
+### 查询规则日志
+GET  {{host}}/rule-engine/instance/5cccc742.296078/logs
+X-Access-Token: {{token}}

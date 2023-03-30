@@ -1,0 +1,125 @@
+## 设备实例管理
+
+### 分页查询设备实例列表
+GET {{host}}/device-instance/_query?pageSize=10
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 按分类目录查询
+GET {{host}}/device-instance/_query?pageSize=10&where=productId$dev-prod-cat=|1|
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+
+### 按标签
+GET {{host}}/device-instance/_query?pageSize=10&where=id$dev-tag=a:b,c:a
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+
+### 未激活设备数量查询
+GET {{host}}/device-instance/_count?terms%5B0%5D.column=state&terms%5B0%5D.value=notActive
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 离线设备数量查询
+GET {{host}}/device-instance/_count?terms%5B0%5D.column=state&terms%5B0%5D.value=offline
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 在线设备数量查询
+GET {{host}}/device-instance/_count?terms%5B0%5D.column=state&terms%5B0%5D.value=online
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 设备数量查询
+GET {{host}}/device-instance/_count
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 设备详情查询
+GET {{host}}/device/instance/202004110186/detail
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 修改设备配置
+PUT {{host}}/device/instance/202004110186
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{"configuration":{"username":"chiefdata","password":"chiefdata"}}
+
+### 修改/新增设备标签
+PATCH {{host}}/device/instance/202004110186/tag
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+[{"key":"a","value":"a","name":"a","_id":0}]
+
+### 发布设备配置
+POST {{host}}/device-instance/202004110170/deploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 设备日志查询
+GET {{host}}/device-instance/202004110170/logs?pageIndex=0&pageSize=10&sorts%5B0%5D.name=createTime&sorts%5B0%5D.order=desc
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 同步设备状态
+GET {{host}}/device/instance/202004110170/state
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 同步设备属性
+GET {{host}}/device/standard/202004110170/property/mistimed
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 查询设备属性数据历史
+GET {{host}}/device-instance/202004110170/properties/_query?pageIndex=0&pageSize=10&sorts%5B0%5D.name=timestamp&sorts%5B0%5D.order=desc&terms%5B0%5D.column=property&terms%5B0%5D.value=voltage
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 设备注销
+POST {{host}}/device-instance/test-6467/undeploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 设备激活
+POST {{host}}/device-instance/test-6467/deploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 删除设备
+DELETE {{host}}/device-instance/test-6467
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 删除设备标签
+DELETE {{host}}/device/instance/202004110186/tag/1f79ae1b454ad814321088568c041795
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 断开设备连接
+POST {{host}}/device/instance/test-3569/disconnect
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 新增/修改设备
+PATCH {{host}}/device-instance
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "id":"test-1000000",
+  "name":"test-1000000",
+  "productId":"demo-device",
+  "productName":"演示设备",
+  "state":{
+    "text":"未激活",
+    "value":"notActive"
+  }
+}
+
+###

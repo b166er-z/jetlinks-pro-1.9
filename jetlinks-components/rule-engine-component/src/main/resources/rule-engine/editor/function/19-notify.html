@@ -1,0 +1,205 @@
+<script type="text/html" data-template-name="notify">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <input type="text" id="node-input-name"
+                   data-i18n="[placeholder]common.label.name">
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-notify-type"><i class="fa fa-archive"></i> <span
+                data-i18n="notify.label.type"></span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <select id="node-input-notify-type">
+
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-provider"><i class="fa fa-group"></i> <span
+                data-i18n="notify.label.provider"></span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <select id="node-input-provider">
+                <option value="">-请先选择类型-</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-notify-id"><i class="fa fa-flag"></i> <span
+                data-i18n="notify.label.config"></span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <select id="node-input-notify-id">
+                <option value="">-请先选择类型-</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-template-id"><i class="fa fa-file-text"></i> <span
+                data-i18n="notify.label.template"></span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <select id="node-input-template-id">
+                <option value="">-请先选择类型-</option>
+            </select>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('notify', {
+        color: "#e08686",
+        category: 'function',
+        name: "消息通知",
+        defaults: {
+            notifyType: {value: "", required: true},
+            notifierId: {value: "", required: true},
+            provider: {value: "", required: true},
+            templateId: {value: "", required: true},
+            name: {value: ""}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "envelope.svg",
+        label: function () {
+            return this.name || "消息通知";
+        },
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
+        },
+        oneditprepare: function () {
+
+            var me = this;
+            var type = $("#node-input-notify-type");
+            var config = $("#node-input-notify-id");
+            var provider = $("#node-input-provider");
+            var template = $("#node-input-template-id");
+            type.on("change", function () {
+                provider.html("");
+                if ((me.notifyType = type.val())) {
+                    doRequest.request(
+                        {
+                            url: RED.settings.apiBaseUrl + "/notifier/config/type/" + type.val() + "/providers"
+                        },
+                        "notifier-provider-list",
+                        {
+                            "typeId": type.val()
+                        },
+                        function (obj){
+                            obj.resultHandler(function (results){
+                                results.result = results.result[0];
+                                return results;
+                            })
+                            .successFunc(function (types) {
+                                $(types.result).each(function () {
+                                    provider.append($("<option>").val(this.id).text(this.name))
+                                });
+                                if (types.result.length === 0) {
+                                    provider.append($("<option>").val("").text("-暂无服务商信息-"))
+                                }
+                                provider.val(me.provider);
+                                provider.trigger("change")
+                            })
+                        }
+                    );
+                }
+            });
+            provider.on("change", function () {
+                me.notifyProvider = provider.val();
+                loadConfig();
+                loadTemplate();
+            });
+
+            config.on("change", function () {
+                me.notifierId = config.val();
+            });
+
+            template.on("change", function () {
+                me.templateId = template.val();
+            })
+
+            function loadConfig() {
+                if (type.val()) {
+                    config.html("");
+                    doRequest.request(
+                        {
+                            url: RED.settings.apiBaseUrl + "/notifier/config/_query/no-paging?includes=id,name&paging=false&where=type=" + type.val() + " and provider=" + provider.val()
+                        },
+                        "notifier-config-list",
+                        {
+                            "paging": false,
+                            "where": "type=" + type.val() + " and provider=" + provider.val()
+                        },
+                        function (obj){
+                            obj.resultHandler(function (results){
+                                results.result = results.result[0];
+                                return results;
+                            })
+                                .successFunc(function (types) {
+                                    $(types.result).each(function () {
+                                        config.append($("<option>").val(this.id).text(this.name))
+                                    });
+                                    if (types.result.length === 0) {
+                                        config.append($("<option>").val("").text("-暂无配置信息-"))
+                                    }
+                                    config.val(me.notifierId);
+                                })
+                        }
+                    );
+                }
+            }
+
+            function loadTemplate() {
+                if (type.val()) {
+                    template.html("");
+                    doRequest.request(
+                        {
+                            url: RED.settings.apiBaseUrl + "/notifier/template/_query/no-paging?includes=id,name&paging=false&where=type=" + type.val() + " and provider=" + provider.val()
+                        },
+                        "notifier-template-list",
+                        {
+                            "paging": false,
+                            "where": "type=" + type.val() + " and provider=" + provider.val()
+                        },
+                        function (obj){
+                            obj.resultHandler(function (results){
+                                results.result = results.result[0];
+                                return results;
+                            })
+                            .successFunc(function (types) {
+                                $(types.result).each(function () {
+                                    template.append($("<option>").val(this.id).text(this.name))
+                                });
+                                if (types.result.length === 0) {
+                                    template.append($("<option>").val("").text("-暂无模版信息-"))
+                                }
+                                template.val(me.templateId);
+                            });
+                        }
+                    );
+                }
+            }
+
+            doRequest.request(
+                {
+                    url: RED.settings.apiBaseUrl + "/notifier/config/types"
+                },
+                "notifier-type-list",
+                {},
+                function (obj){
+                    obj.resultHandler(function (results){
+                        results.result = results.result[0];
+                        return results;
+                    }).successFunc(function (response) {
+                        if (response.result) {
+                            $(response.result).each(function () {
+                                type.append($("<option>").val(this.id).text(this.name))
+                            });
+                            type.val(me.notifyType);
+                            type.trigger("change")
+                        }
+
+                    })
+                }
+            );
+        }
+    });
+</script>

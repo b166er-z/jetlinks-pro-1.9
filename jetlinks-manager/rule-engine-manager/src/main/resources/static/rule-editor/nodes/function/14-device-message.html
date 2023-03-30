@@ -1,0 +1,190 @@
+<script type="text/x-red" data-template-name="device-message-sender">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-from"><i class="fa fa-archive"></i> <span>消息来源</span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <select id="node-input-from"  style="width: 80%">
+                <option value="pre-node">上游节点</option>
+                <option value="fixed">固定消息</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-selector"><i class="fa fa-search"></i> <span>选择设备</span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <textarea style="width: 80%" id="node-input-selector" placeholder="设备选择表达式"></textarea>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-stateOperator"><i class="fa fa-filter"></i><span>状态过滤</span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <select id="node-input-stateOperator"  style="width: 80%">
+                <option value="all">直接发送指令</option>
+                <option value="ignoreOffline">忽略离线设备指令</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-waitType"><i class="fa fa-flag"></i> <span>返回结果</span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+            <select id="node-input-waitType" style="width: 80%">
+                <option value="sync">等待</option>
+                <option value="forget">忽略</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row sync">
+        <label for="node-input-timeout"><i class="fa fa-calendar"></i> <span>超时时间</span></label>
+        <div style="display: inline-block; width: calc(100% - 105px)">
+        <input type="text" style="width: 80%" id="node-input-timeout" placeholder="超时时间">
+        </div>
+    </div>
+    <div class="form-row fixed" style="margin-bottom: 0;">
+        <label for="node-input-message"><i class="fa fa-file-text"></i> <span>消息内容</span></label>
+        <input type="hidden" id="node-input-message" autofocus="autofocus">
+        <input type="hidden" id="node-input-noerr">
+    </div>
+    <div class="form-row node-text-editor-row fixed" style="position:relative">
+        <div style="position: absolute; right:0; bottom:calc(100% + 3px);">
+            <button id="node-function-expand-js" class="red-ui-button red-ui-button-small"><i class="fa fa-expand"></i>
+            </button>
+        </div>
+        <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-func-editor"></div>
+    </div>
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('device-message-sender', {
+        color: "#98abef",
+        category: 'function',
+        name: "设备指令",
+        defaults: {
+            stateOperator:{value:'ignoreOffline'},
+            waitType:{value:"sync",required: true},
+            from: {value: "fixed",required:true},
+            name: {value: "设备指令"},
+            timeout:{value:"10s"},
+            message: {value: JSON.stringify({"messageType": "READ_PROPERTY", "properties": []}, null, 2)},
+            noerr: {value:0,required:true,validate:function(v) { return !v; }},
+            selector:{value:""}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "device.svg",
+        label: function () {
+            return this.name || "设备指令";
+        },
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
+        },
+        oneditprepare: function () {
+            var that = this;
+            $("#node-input-outputs").spinner({
+                min: 0,
+                change: function (event, ui) {
+                    var value = this.value;
+                    if (!value.match(/^\d+$/)) {
+                        value = 1;
+                    } else if (value < this.min) {
+                        value = this.min;
+                    }
+                    if (value !== this.value) {
+                        $(this).spinner("value", value);
+                    }
+                }
+            });
+
+            this.editor = RED.editor.createEditor({
+                id: 'node-input-func-editor',
+                mode: 'ace/mode/json',
+                value: $("#node-input-message").val()
+
+            });
+
+            // RED.library.create({
+            //     url:"functions", // where to get the data from
+            //     type:"function", // the type of object the library is for
+            //     editor:this.editor, // the field name the main text body goes to
+            //     mode:"ace/mode/nrjavascript",
+            //     fields:['name','outputs'],
+            //     ext:"js"
+            // });
+            this.editor.focus();
+            RED.popover.tooltip($("#node-function-expand-js"), RED._("node-red:common.label.expand"));
+
+            $("#node-function-expand-js").on("click", function (e) {
+                e.preventDefault();
+                var value = that.editor.getValue();
+                RED.editor.editJavaScript({
+                    value: value,
+                    width: "Infinity",
+                    cursor: that.editor.getCursorPosition(),
+                    mode: "ace/mode/json",
+                    complete: function (v, cursor) {
+                        that.editor.setValue(v, -1);
+                        that.editor.gotoLine(cursor.row + 1, cursor.column, false);
+                        setTimeout(function () {
+                            that.editor.focus();
+                        }, 300);
+                    }
+                })
+            })
+
+           // $("#node-input-selector").val(this.selector)
+            $("#node-input-from").on("change",function () {
+                var val =$(this).val();
+                if(val==='pre-node'){
+                    $(".fixed").hide();
+                }else {
+                    $(".fixed").show();
+                }
+            });
+            $("#node-input-waitType").on("change",function () {
+                var val =$(this).val();
+                if(val==="sync"){
+                    $(".sync").show();
+                }else {
+                    $(".sync").hide();
+                }
+            })
+
+        },
+        oneditsave: function () {
+            var annot = this.editor.getSession().getAnnotations();
+            this.noerr = 0;
+            $("#node-input-noerr").val(0);
+            for (var k = 0; k < annot.length; k++) {
+                //console.log(annot[k].type,":",annot[k].text, "on line", annot[k].row);
+                if (annot[k].type === "error") {
+                    $("#node-input-noerr").val(annot.length);
+                    this.noerr = annot.length;
+                }
+            }
+            $("#node-input-message").val(this.editor.getValue());
+            this.editor.destroy();
+            delete this.editor;
+        },
+        oneditcancel: function () {
+            this.editor.destroy();
+            delete this.editor;
+        },
+        oneditresize: function (size) {
+            var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+            var height = $("#dialog-form").height();
+            for (var i = 0; i < rows.length; i++) {
+                height -= $(rows[i]).outerHeight(true);
+            }
+            var editorRow = $("#dialog-form>div.node-text-editor-row");
+            height -= (parseInt(editorRow.css("marginTop")) + parseInt(editorRow.css("marginBottom")));
+            $(".node-text-editor").css("height", height + "px");
+            this.editor.resize();
+        }
+    });
+</script>

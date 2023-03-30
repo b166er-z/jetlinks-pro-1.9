@@ -1,0 +1,23 @@
+<script type="text/x-red" data-help-name="mqtt out">
+    <p>连接到MQTT代理并发布消息。</p>
+    <h3>输入</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">字符串 | buffer</span></dt>
+        <dd>要发布的有效负载。如果未设置此属性，则不会发送任何消息。要发送空白消息，请将此属性设置为空字符串。</dd>
+
+        <dt class="optional">topic <span class="property-type">字符串</span></dt>
+        <dd>要发布的MQTT主题。</dd>
+
+        <dt class="optional">qos <span class="property-type">number</span></dt>
+        <dd>QoS服务质量：0, 最多一次； 1, 最少一次； 2, 只一次。默认值为0。</dd>
+
+        <dt class="optional">retain <span class="property-type">布尔值</span></dt>
+        <dd>设置为<code>true</code>来将消息保留在代理上。默认值为<code>false</code>。</dd>
+    </dl>
+    <h3>详细</h3>
+    <p>上游输入的<code>payload</code>用作已发布消息的有效载荷。如果包含Object，则会在发送之前将其转换为JSON字符串。</p>
+    <p>可以在节点中配置所使用的主题，或者如果留为空白，则可以通过<code>topic</code>进行设置。</p>
+    <p>同样，可以在节点中配置QoS和保留值，或者如果保留空白，则分别由上游输入<code>qos</code>和<code>retain</code>设置。要清除先前存储在代理中的主题，请设置保留标志并向该主题发布空消息。</p>
+    <p>该节点需要与要配置的MQTT代理的连接。通过在[<a target="_blank" href="/#/network/type">网络组件</a>]中配置。</p>
+    <p>如果需要，几个MQTT节点（输入或输出）可以共享相同的代理连接。</p>
+</script>

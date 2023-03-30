@@ -1,0 +1,102 @@
+version: '2'
+services:
+  redis:
+    image: redis:5.0.4
+    container_name: jetlinks-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./data/redis:/data"
+    command: redis-server --appendonly yes --requirepass "JetLinks@redis"
+    environment:
+      - TZ=Asia/Shanghai
+  elasticsearch:
+    image: elasticsearch:6.8.10
+    container_name: jetlinks-elasticsearch
+    environment:
+      ES_JAVA_OPTS: "-Djava.net.preferIPv4Stack=true -Xms2g -Xmx2g"
+      TZ: Asia/Shanghai
+      transport.host: 0.0.0.0
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      discovery.zen.minimum_master_nodes: 1
+      discovery.zen.ping.unicast.hosts: elasticsearch
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  kibana:
+    image: kibana:6.8.10
+    container_name: jetlinks-kibana
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    links:
+      - elasticsearch:elasticsearch
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+  postgres:
+    image: postgres:11-alpine
+    container_name: jetlinks-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./data/postgres:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_PASSWORD: jetlinks
+      POSTGRES_DB: jetlinks
+      TZ: Asia/Shanghai
+  ui:
+    image: registry.cn-shenzhen.aliyuncs.com/jetlinks/jetlinks-ui-antd:1.8.0
+    container_name: jetlinks-pro-ui
+    ports:
+      - 9000:80
+    environment:
+      - "API_BASE_PATH=http://jetlinks:8844/" #API根路径
+    volumes:
+      - "./data/upload:/usr/share/nginx/html/upload"
+    depends_on:
+      - jetlinks
+  jetlinks:
+    image: registry.cn-shenzhen.aliyuncs.com/jetlinks-pro/jetlinks-standalone:1.8.0
+    container_name: jetlinks-pro
+    ports:
+      - 8844:8844 # API端口
+      - 1883:1883 # MQTT端口
+      - 11883:11883 # 通过openAPI使用mqtt订阅平台消息
+      - 8100-8110:8100-8110 # 预留端口
+      - 8200-8210:8200-8210/udp # udp端口
+    volumes:
+      - "./data/upload:/application/static/upload"  # 持久化上传的文件
+      - "./data/protocols:/application/data/protocols" # 临时保存协议目录
+    environment:
+      - "TZ=Asia/Shanghai"
+      #        - "JAVA_OPTS=-Xms4G -Xmx4G -XX:+UseG1GC"  # jvm参数，根据情况调整
+      - "hsweb.file.upload.static-location=http://127.0.0.1:9000/upload"  #上传的静态文件访问根地址,为本机的IP或者域名。需要前后端都能访问。
+      - "spring.r2dbc.url=r2dbc:postgresql://postgres:5432/jetlinks" #数据库连接地址
+      - "spring.r2dbc.username=postgres"
+      - "spring.r2dbc.password=jetlinks"
+      - "spring.data.elasticsearch.client.reactive.endpoints=elasticsearch:9200"
+#        - "spring.data.elasticsearch.client.reactive.username=admin"
+#        - "spring.data.elasticsearch.client.reactive.password=admin"
+#        - "spring.reactor.debug-agent.enabled=false" #设置为false能提升性能
+#        - "jetlinks.device.storage.enable-last-data-in-db=true" # 开启记录最新数据到数据库，但是会降低吞吐量
+      - "spring.redis.host=redis"
+      - "spring.redis.port=6379"
+      - "spring.redis.password=JetLinks@redis"
+      - "logging.level.io.r2dbc=warn"
+      - "logging.level.org.springframework.data=warn"
+      - "logging.level.org.springframework=warn"
+      - "logging.level.org.jetlinks=warn"
+      - "logging.level.org.hswebframework=warn"
+      - "logging.level.org.springframework.data.r2dbc.connectionfactory=warn"
+    links:
+      - redis:redis
+      - postgres:postgres
+      - elasticsearch:elasticsearch
+    depends_on:
+      - elasticsearch
+      - postgres
+      - redis

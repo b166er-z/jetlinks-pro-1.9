@@ -1,0 +1,49 @@
+## 设备型号管理
+
+### 设备型号查询
+GET {{host}}/device-product/_query?pageSize=10
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 新增/修改设备型号
+PATCH {{host}}/device-product
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "state":0,
+  "id":"test123456",
+  "name":"test123456",
+  "orgId":"",
+  "messageProtocol":"1239767766126891008",
+  "transportProtocol":"TCP",
+  "deviceType":"device",
+  "configuration":
+    {"tcp_auth_key":"aaaa"}
+}
+
+### 发布设备型号
+POST {{host}}/device-product/test123456/deploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{}
+
+### 停用设备型号
+POST {{host}}/device-product/test123456/undeploy
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{}
+
+### 根据ID查询设备型号详情
+GET {{host}}/device-product/test123456
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 型号协议认证配置查询
+GET {{host}}/protocol/1239767766126891008/TCP/configuration
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+###

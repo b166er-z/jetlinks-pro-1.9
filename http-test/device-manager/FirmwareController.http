@@ -1,0 +1,62 @@
+
+## 固件管理
+### 查询所有固件
+GET {{host}}/firmware/_query
+X-Access-Token: {{token}}
+
+### 分页查询固件
+GET {{host}}/firmware/_query?pageSize=10
+X-Access-Token: {{token}}
+
+### 新增固件
+PATCH {{host}}/firmware
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "productId":"shoushuijiv1",
+  "name":"aaaaa",
+  "version":"21",
+  "versionOrder":"1",
+  "signMethod":"MD5",
+  "sign":"1111",
+  "url":"http://192.168.3.110:8844/upload/20200608/1269883216438251520.gitignore",
+  "size":444,
+  "productName":"售水机V1"
+}
+
+### 查询单个固件
+GET {{host}}//firmware/1269883234104659968
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 删除单个固件
+GET {{host}}//firmware/1269884290675003392
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 编辑固件
+PATCH {{host}}/firmware
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+  "productId":"shoushuijiv1",
+  "name":"aaaaa",
+  "version":"21",
+  "versionOrder":1,
+  "signMethod":"MD5",
+  "sign":"1111",
+  "url":"http://192.168.3.110:8844/upload/20200608/1269883216438251520.gitignore",
+  "size":444,
+  "id":"1269883234104659968",
+  "productName":"售水机V1"
+}
+
+### 根据条件查询固件
+GET {{host}}/firmware/_query?terms%5B0%5D.column=name%24LIKE&terms%5B0%5D.value=%25aaaa%25&terms%5B1%5D.column=productId&terms%5B1%5D.value=hk-video&pageSize=10
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+###
+

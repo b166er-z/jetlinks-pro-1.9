@@ -1,0 +1,37 @@
+## 设备消息管理
+
+### 获取实时事件
+GET {{host}}/device/test123456/event
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 获取设备属性
+GET {{host}}/device/{deviceId}/property/{property:.+}
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 获取标准设备属性
+GET {{host}}/device/standard/{deviceId}/property/{property:.+}
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 设置设备属性
+POST {{host}}/device/setting/{deviceId}/property
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{}
+
+### 设备功能调用
+POST {{host}}/device/invoked/{deviceId}/function/{functionId}
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{}
+
+### 获取设备所有属性
+POST {{host}}/device/{deviceId}/properties
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+[]

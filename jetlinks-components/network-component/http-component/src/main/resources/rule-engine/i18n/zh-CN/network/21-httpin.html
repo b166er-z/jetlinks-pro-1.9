@@ -1,0 +1,24 @@
+
+<script type="text/x-red" data-help-name="http in">
+    <p>创建用于创建Web服务的HTTP端点。</p>
+    <p><b>注意：</b>该节点不发送对请求的任何响应。必须在下游节点中包含HTTP响应节点才能完成请求。</p>
+    <h3>输出</h3>
+    <dl class="message-properties">
+        <dt>path</dt>
+        <dd>请求地址。</dd>
+        <dt>payload</dt>
+        <dd>HTTP请求正文。<code>application/json</code>和<code>application/x-www-form-urlencoded</code>将被自动转换为对象。</dd>
+        <dt>headers<span class="property-type">object</span></dt>
+        <dd>HTTP请求头。</dd>
+        <dt>queryParameters<span class="property-type">object</span></dt>
+        <dd>URL 查询参数。</dd>
+        <dt>pathVars<span class="property-type">object</span></dt>
+        <dd>url 表达式参数。</dd>
+    </dl>
+    <h3>详细</h3>
+    <p>节点将在配置的路径上监听特定类型的请求。路径可以完全指定，例如<code>/user</code>，或包括可以接受任何值的命名参数，例如<code>/user/{name}</code>。
+        使用命名参数时，可以在<code>pathVars</code>下访问其在请求中的实际值。</p>
+    <p>对于包含正文的请求（例如POST或PUT），请求的内容将作为<code>payload</code>提供。</p>
+    <p>如果可以确定请求的内容类型，则正文将被解析为任何适当的类型。例如，<code>application/json</code>将被解析为其JSON对象表示。</p>
+
+</script>

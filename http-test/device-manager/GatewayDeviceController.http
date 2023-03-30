@@ -1,0 +1,20 @@
+## 网关设备管理
+
+### 分页查询网关设备列表
+GET {{host}}/device/gateway/_query?pageSize=8
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 解绑子设备
+POST {{host}}/device/gateway/gyf-test-main/unbind/gyf-test-son1
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+### 绑定子设备
+POST {{host}}/device/gateway/gyf-test-main/bind
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+["gyf-test-son1"]
+
+###

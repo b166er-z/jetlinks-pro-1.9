@@ -1,0 +1,111 @@
+<script type="text/html" data-help-name="device-message-sender">
+    <p>向设备发送指令。</p>
+    <p>消息来源为<code>上一个节点</code>时，将使用上一个节点传入的数据作为设备消息。</p>
+
+    <p>消息来源为<code>固定消息</code>时，将使用配置的消息内容作为设备消息，消息内容中支持使用表达式从上一个节点中获取变量信息，如：</p>
+    <code>
+<pre>
+{
+ "messageType":"READ_PROPERTY",
+ "deviceId":"设备ID",
+ "properties":["${prop}"]
+}
+</pre>
+    </code>
+
+    <h2>选择设备</h2>
+    <p>如果下发指令的设备是动态获取的，可使用表达式函数来获取设备并发送到对应到设备。</p>
+    <p>例如:</p>
+    <p>获取产品ID为<code>demo-device</code>的设备:<code>product('demo-device')</code></p>
+
+    <p>获取分组为<code>demo-group</code>下的设备:<code>in_group('demo-group')</code></p>
+
+    <p>获取分组为<code>demo-group</code>下的设备(包含子分组):<code>in_group_tree('demo-group')</code></p>
+
+    <p>获取当前设备相同分组下的设备:<code>same_group(deviceId)</code></p>
+
+    <p>获取标签<code>supplier</code>为<code>测试厂商</code>下的设备:<code>tag('supplier','测试厂商')</code></p>
+
+    <p>按状态筛选 :<code>state('online')</code>,状态:online,offline,notActive</p>
+
+    <p>函数的参数可以是固定的字符串,如:<code>product('demo-device')</code>,也可以是上游节点传递的变量,如: <code>same_group(deviceId)</code></p>
+    <p>多个表达式使用<code>,</code>分隔,例如:<code>same_group(deviceId),tag('supplier','测试厂商')</code></p>
+
+    <h2>状态过滤</h2>
+
+    <p>直接发送指令：无论设备是否在线，都将尝试发送指令，如果设备不在线，将发生错误：<code>DeviceOperationException(设备未在线)</code></p>
+    <p>忽略离线设备指令：发送指令前，检查设备状态，如果设备已离线，则不发送指令。如果所有设备都离线，则会返回<code>DeviceOperationException(无可用设备)</code></p>
+
+    <h2>数据格式</h2>
+
+    <h3>READ_PROPERTY 读取属性</h3>
+    向设备发送读取属性指令,格式:
+    <code>
+<pre>
+{
+ "messageType":"READ_PROPERTY",
+ "deviceId":"设备ID",
+ "properties":["属性标识"]
+}
+</pre>
+    </code>
+    设备返回:
+    <code>
+<pre>
+{
+ "deviceId":"设备ID",
+ "properties":{"属性标识":"属性值"}
+}
+</pre>
+    </code>
+
+    <h3>WRITE_PROPERTY 修改属性</h3>
+    向设备发送修改属性指令,格式:
+    <code>
+<pre>
+{
+ "messageType":"WRITE_PROPERTY",
+ "deviceId":"设备ID",
+ "properties":{"属性标识":"属性值"}
+}
+</pre>
+    </code>
+    设备返回:
+    <code>
+<pre>
+{
+ "deviceId":"设备ID",
+ "properties":{"属性标识":"属性值"}
+}
+</pre>
+    </code>
+
+    <h3>INVOKE_FUNCTION 调用功能</h3>
+    向设备发送调用功能指令,格式:
+    <code>
+<pre>
+{
+ "messageType":"INVOKE_FUNCTION",
+ "deviceId":"设备ID",
+ "functionId":"功能标识",
+ "inputs":[
+    {"name":"参数名","value":"值"}
+    ]
+}
+</pre>
+    </code>
+    设备返回:
+    <code>
+<pre>
+{
+ "deviceId":"设备ID",
+ "functionId":"功能标识",
+ "output":"功能返回结果"
+}
+</pre>
+    </code>
+
+    更多消息类型请<a href="http://doc.jetlinks.cn/basics-guide/protocol-support.html#%E5%B9%B3%E5%8F%B0%E7%BB%9F%E4%B8%80%E6%B6%88%E6%81%AF%E5%AE%9A%E4%B9%89" target="_blank">查看文档</a>
+
+
+</script>

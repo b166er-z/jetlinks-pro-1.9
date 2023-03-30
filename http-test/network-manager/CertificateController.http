@@ -1,0 +1,3 @@
+
+GET {{host}}/network/certificate/1281100381323706368/detail
+X-Access-Token: {{token}}

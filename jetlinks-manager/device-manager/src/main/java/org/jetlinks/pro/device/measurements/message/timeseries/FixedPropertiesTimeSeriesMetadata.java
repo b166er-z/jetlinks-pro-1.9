@@ -1,0 +1,82 @@
+package org.jetlinks.pro.device.measurements.message.timeseries;
+
+import org.jetlinks.core.metadata.PropertyMetadata;
+import org.jetlinks.core.metadata.SimplePropertyMetadata;
+import org.jetlinks.core.metadata.types.*;
+import org.jetlinks.pro.device.service.data.StorageConstants;
+import org.jetlinks.pro.timeseries.TimeSeriesMetadata;
+import org.jetlinks.pro.timeseries.TimeSeriesMetric;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class FixedPropertiesTimeSeriesMetadata implements TimeSeriesMetadata {
+
+    private final static List<PropertyMetadata> metadata = new ArrayList<>();
+
+    private final TimeSeriesMetric metric;
+
+    private final List<PropertyMetadata> fixed;
+
+    public FixedPropertiesTimeSeriesMetadata(String productId, List<PropertyMetadata> fixed) {
+        this.metric = DeviceTimeSeriesMetric.devicePropertyMetric(productId);
+        this.fixed = new ArrayList<>(fixed.size() + metadata.size());
+        for (PropertyMetadata propertyMetadata : fixed) {
+            SimplePropertyMetadata property = new SimplePropertyMetadata();
+            property.setId(propertyMetadata.getId());
+            property.setName(propertyMetadata.getName());
+            if (StorageConstants.propertyIsJsonStringStorage(propertyMetadata)) {
+                property.setValueType(StringType.GLOBAL);
+            } else {
+                property.setValueType(propertyMetadata.getValueType());
+            }
+            this.fixed.add(property);
+        }
+        this.fixed.addAll(metadata);
+    }
+
+    static {
+
+        {
+            SimplePropertyMetadata property = new SimplePropertyMetadata();
+            property.setId("id");
+            property.setValueType(StringType.GLOBAL);
+            property.setName("id");
+            metadata.add(property);
+        }
+
+        {
+            SimplePropertyMetadata property = new SimplePropertyMetadata();
+            property.setId("deviceId");
+            property.setValueType(new StringType());
+            property.setName("设备ID");
+            metadata.add(property);
+        }
+
+//        {
+//            SimplePropertyMetadata property = new SimplePropertyMetadata();
+//            property.setId("productId");
+//            property.setValueType(new StringType());
+//            property.setName("产品ID");
+//            metadata.add(property);
+//        }
+
+        {
+            SimplePropertyMetadata property = new SimplePropertyMetadata();
+            property.setId("createTime");
+            property.setValueType(DateTimeType.GLOBAL);
+            property.setName("创建时间");
+            metadata.add(property);
+        }
+    }
+
+    @Override
+    public TimeSeriesMetric getMetric() {
+        return metric;
+    }
+
+    @Override
+    public List<PropertyMetadata> getProperties() {
+        return new ArrayList<>(fixed);
+    }
+}

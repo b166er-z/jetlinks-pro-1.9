@@ -1,0 +1,15 @@
+{
+  "page": {
+    "title": "Rule Engine Editor",
+    "favicon": "favicon.ico",
+    "tabicon": "red/images/node-red-icon-black.svg"
+  },
+  "header": {
+    "title": "Rule Engine Editor",
+    "image": "red/images/node-red.svg"
+  },
+  "asset": {
+    "red": "red/red.min.js",
+    "main": "red/main.min.js"
+  }
+}

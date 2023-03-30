@@ -1,0 +1,21 @@
+
+### 设备详情
+POST {{host}}/api/v1/device/_detail/_query
+Content-Type: application/json
+X-Access-Token: {{token}}
+
+{
+"pageSize": 20
+}
+
+
+### 同步设备状态
+POST {{host}}/api/v1/device/state/_sync
+Content-Type: application/json
+X-Access-Token: {{token}}
+
+{
+
+}
+
+

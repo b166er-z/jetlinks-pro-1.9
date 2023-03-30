@@ -1,0 +1,26 @@
+
+GET {{host}}/notifications/1267752631465082880/read
+X-Access-Token: {{token}}
+
+###
+GET {{host}}/notifications/subscribes/_query
+X-Access-Token: {{token}}
+
+###
+PATCH {{host}}/notifications/subscribe
+X-Access-Token: {{token}}
+Content-Type: application/json
+
+{
+        "id": "test",
+        "subscriberType": "user",
+        "subscriber": "1199596756811550720",
+        "topicProvider": "device_alarm",
+        "topicName": "设备告警",
+        "topicConfig": {},
+        "description": "测试",
+        "state": {
+          "text": "订阅中",
+          "value": "enabled"
+        }
+      }

@@ -1,0 +1,333 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="http request">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    </div>
+    <div class="form-tips" id="tip-json" hidden><span data-i18n="httpin.tip.req"></span></div>
+
+    <div class="form-row">
+        <label for="node-input-method"><i class="fa fa-tasks"></i> <span data-i18n="httpin.label.method"></span></label>
+        <select type="text" id="node-input-method" style="width:70%;">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+            <option value="HEAD">HEAD</option>
+            <option value="auto">由上游节点设置</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-url"><i class="fa fa-globe"></i> <span data-i18n="httpin.label.url"></span></label>
+        <input id="node-input-url" type="text" placeholder="http://">
+    </div>
+
+    <!--    <div class="form-row node-input-paytoqs-row">-->
+    <!--        <input type="checkbox" id="node-input-paytoqs" style="display: inline-block; width: auto; vertical-align: top;">-->
+    <!--        <label for="node-input-paytoqs" style="width: auto" data-i18n="httpin.label.paytoqs"></label>-->
+    <!--    </div>-->
+
+    <div class="form-row">
+        <input type="checkbox" id="node-input-usetls" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-usetls" style="width: auto" data-i18n="httpin.use-tls"></label>
+        <div id="node-row-tls" class="form-row hide tls">
+            <label style="width: auto; margin-left: 20px; margin-right: 10px;"
+                   for="node-input-tls"><span>TLS证书</span></label>
+            <select style="width: 300px" id="node-input-tls"></select>
+        </div>
+
+        <div id="node-row-trustAll" class="form-row hide tls">
+            <label style="width: auto; margin-left: 20px; margin-right: 10px;"
+                   for="node-input-trustAll"><span>信任所有</span></label>
+            <select style="width: 300px" id="node-input-trustAll">
+                <option value="true">是,信任所有服务端证书</option>
+                <option value="false">否,只信任选择的TLS证书</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <input type="checkbox" id="node-input-useAuth" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-useAuth" style="width: 70%;"><span>认证</span></label>
+        <div style="margin-left: 20px" class="node-input-useAuth-row hide">
+            <div class="form-row">
+                <label for="node-input-authType-select"><i class="fa fa-user-secret "></i> <span
+                        data-i18n="httpin.label.authType"></span></label>
+                <select type="text" id="node-input-authType-select" style="width:70%;">
+                    <option value="basic" data-i18n="httpin.basic"></option>
+                    <!--                    <option value="digest" data-i18n="httpin.digest"></option>-->
+                    <option value="bearer" data-i18n="httpin.bearer"></option>
+                    <option value="oauth2">OAuth2</option>
+                </select>
+                <input type="hidden" id="node-input-authType">
+            </div>
+            <div class="form-row auth-type oauth2-grant-type node-input-oauth2-row">
+                <label for="node-input-grantType"><i class="fa fa-user"></i> <span>授权类型</span></label>
+                <select type="text" id="node-input-grantType" style="width:70%;">
+                    <option value="client_credentials">client_credentials</option>
+                    <option value="password">password</option>
+                </select>
+            </div>
+
+            <div class="form-row auth-type node-input-oauth2-row oauth2-grant-type">
+                <label for="node-input-tokenUrl"><i class="fa fa-globe"></i> <span>授权地址</span></label>
+                <input type="text" id="node-input-tokenUrl">
+            </div>
+
+            <div class="form-row auth-type node-input-oauth2-row oauth2-grant-type">
+                <label for="node-input-authInsertType"><i class="fa fa-cog"></i> <span>认证方式</span></label>
+                <select type="text" id="node-input-authInsertType" style="width:70%;">
+                    <option value="header">请求头</option>
+                    <option value="body">请求体</option>
+                </select>
+            </div>
+
+            <div class="form-row auth-type node-input-oauth2-row oauth2-grant-type">
+                <label for="node-input-bodyType"><i class="fa fa-cog"></i> <span>请求方式</span></label>
+                <select type="text" id="node-input-bodyType" style="width:70%;">
+                    <option value="formBody">application/x-www-form-urlencoded</option>
+                    <option value="jsonBody">application/json</option>
+                </select>
+            </div>
+
+            <div class="form-row auth-type node-input-oauth2-row oauth2-grant-type">
+                <label for="node-input-scope"><i class="fa fa-group"></i> <span>scope</span></label>
+                <input type="text" id="node-input-scope">
+            </div>
+
+            <div class="form-row auth-type node-input-oauth2-row oauth2-grant-type">
+                <label for="node-input-client_id"><i class="fa fa-user"></i> <span>client_id</span></label>
+                <input type="text" id="node-input-client_id">
+            </div>
+
+
+            <div class="form-row auth-type node-input-oauth2-row node-input-oauth2-client_credentials-row">
+                <label for="node-input-client_secret"><i class="fa fa-lock"></i> <span>client_secret</span></label>
+                <input type="password" id="node-input-client_secret">
+            </div>
+
+            <div class="form-row auth-type node-input-basic-row node-input-oauth2-password-row">
+                <label for="node-input-user"><i class="fa fa-user"></i> <span data-i18n="common.label.username"></span></label>
+                <input type="text" id="node-input-user">
+            </div>
+
+            <div class="form-row auth-type node-input-oauth2-row node-input-oauth2-password-row node-input-basic-row node-input-bearer-row">
+                <label for="node-input-password"> <i class="fa fa-lock"></i>
+                    <span data-i18n="httpin.label.bearerToken" class="auth-type node-input-bearer-row"></span>
+                    <span data-i18n="common.label.password" class="auth-type node-input-basic-row node-input-oauth2-password-row" ></span>
+                </label>
+                <input type="password" id="node-input-password">
+            </div>
+
+        </div>
+    </div>
+
+    <!--    <div class="form-row">-->
+    <!--        <input type="checkbox" id="node-input-persist" style="display: inline-block; width: auto; vertical-align: top;">-->
+    <!--        <label for="node-input-persist" style="width: auto" data-i18n="httpin.persist"></label>-->
+    <!--    </div>-->
+
+    <!--    <div class="form-row">-->
+    <!--        <input type="checkbox" id="node-input-useProxy" style="display: inline-block; width: auto; vertical-align: top;">-->
+    <!--        <label for="node-input-useProxy" style="width: auto;"><span data-i18n="httpin.use-proxy"></span></label>-->
+    <!--        <div id="node-input-useProxy-row" class="hide">-->
+    <!--            <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-proxy"><i class="fa fa-globe"></i> <span data-i18n="httpin.proxy-config"></span></label><input type="text" style="width: 270px" id="node-input-proxy">-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+    <!--    <div class="form-row">-->
+    <!--        <label for="node-input-ret"><i class="fa fa-arrow-left"></i> <span data-i18n="httpin.label.return"></span></label>-->
+    <!--        <select type="text" id="node-input-ret" style="width:70%;">-->
+    <!--        <option value="txt" data-i18n="httpin.utf8"></option>-->
+    <!--        <option value="bin" data-i18n="httpin.binary"></option>-->
+    <!--        <option value="obj" data-i18n="httpin.json"></option>-->
+    <!--        </select>-->
+    <!--    </div>-->
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('http request', {
+        category: 'network',
+        color: "rgb(231, 231, 174)",
+        name: "HTTP请求",
+        defaults: {
+            name: {value: ""},
+            method: {value: "GET"},
+            ret: {value: "txt"},
+            user: {value: ""},
+            password: {value: ""},
+            trustAll: {value: 'true'},
+            grantType:{value:"client_credentials"},
+            authInsertType:{value:"header"},
+            bodyType:{value:"formBody"},
+            token: {value: ""},
+            client_id:{value:""},
+            scope:{value:""},
+            tokenUrl:{value:""},
+            client_secret:{value:""},
+            usetls: {value: false},
+            tls: {value: ""},
+            paytoqs: {value: false},
+            url: {
+                value: "", validate: function (v) {
+                    return (v.trim().length === 0) || (v.indexOf("://") === -1) || (v.trim().indexOf("http") === 0)
+                }
+            },
+            authType: {value: ""}
+        },
+        inputs: 1,
+        outputs: 1,
+        outputLabels: function (i) {
+            return ({
+                txt: this._("httpin.label.utf8String"),
+                bin: this._("httpin.label.binaryBuffer"),
+                obj: this._("httpin.label.jsonObject")
+            }[this.ret]);
+        },
+        icon: "white-globe.svg",
+        label: function () {
+            return this.name || "HTTP请求"
+        },
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
+        },
+        oneditprepare: function () {
+            var that = this;
+            $.ajax({
+                url: RED.settings.apiBaseUrl + "/network/certificate/_query/no-paging?paging=false"
+            })
+                .then(function (response) {
+                    if (response.result) {
+                        $(response.result).each(function () {
+                            $("#node-input-tls").append($("<option>").val(this.id).text(this.name))
+                        });
+                        $("#node-input-tls").append($("<option>").val("").text("-不使用证书-"))
+                        // if (response.result.length === 0) {
+                        //     $("#node-input-tls").append($("<option>").val("").text("-请先在证书管理中添加-"))
+                        // }
+                        $("#node-input-tls").val(that.tls)
+                    }
+                })
+
+            $("#node-input-useAuth").on("change", function () {
+                if ($(this).is(":checked")) {
+                    $(".node-input-useAuth-row").show();
+                    // Nodes (< version 0.20.x) with credentials but without authentication type, need type 'basic'
+                    if (!$('#node-input-authType').val()) {
+                        $("#node-input-authType-select").val('basic').trigger("change");
+                    }
+                } else {
+                    $(".node-input-useAuth-row").hide();
+                    $('#node-input-authType').val('');
+                    $('#node-input-user').val('');
+                    $('#node-input-password').val('');
+                }
+            });
+            $("#node-input-grantType").on("change",function () {
+                var val = $(this).val();
+                if($("#node-input-authType-select").val()==='oauth2'){
+                $(".auth-type,.node-input-oauth2-row").hide();
+                $(".oauth2-grant-type").show();
+                $(".node-input-oauth2-"+val+"-row").show();
+                }
+            })
+            $("#node-input-authType-select").on("change", function () {
+                var val = $(this).val();
+                $("#node-input-authType").val(val);
+                $(".auth-type").hide();
+                $(".node-input-"+val+"-row").show();
+                if (val === "basic" || val === "digest") {
+                    $('#node-span-password').show();
+                    $('#node-span-token').val('').hide();
+                } else if (val === "bearer") {
+                    $('#node-span-password').hide();
+                    $('#node-span-token').show();
+                    $('#node-input-user').val('');
+                    $('#node-input-password').val('');
+                } else if (val === "oauth2") {
+                    $("#node-input-grantType").trigger("change");
+                }
+            });
+            $("#node-input-method").on("change", function () {
+                if ($(this).val() == "GET") {
+                    $(".node-input-paytoqs-row").show();
+                } else {
+                    $(".node-input-paytoqs-row").hide();
+                }
+            });
+            if (this.authType) {
+                $('#node-input-useAuth').prop('checked', true);
+                $("#node-input-useAuth").change();
+                $("#node-input-authType-select").val(this.authType).trigger("change");
+            } else {
+                $('#node-input-useAuth').prop('checked', false);
+                $("#node-input-useAuth").change();
+            }
+
+            function updateTLSOptions() {
+                if ($("#node-input-usetls").is(':checked')) {
+                    $(".tls").show();
+                } else {
+                    $(".tls").hide();
+                }
+            }
+
+
+            updateTLSOptions();
+            $("#node-input-usetls").on("click", function () {
+                updateTLSOptions();
+            });
+
+            function updateProxyOptions() {
+                if ($("#node-input-useProxy").is(":checked")) {
+                    $("#node-input-useProxy-row").show();
+                } else {
+                    $("#node-input-useProxy-row").hide();
+                }
+            }
+
+            if (this.proxy) {
+                $("#node-input-useProxy").prop("checked", true);
+            } else {
+                $("#node-input-useProxy").prop("checked", false);
+            }
+            updateProxyOptions();
+            $("#node-input-useProxy").on("click", function () {
+                updateProxyOptions();
+            });
+
+            $("#node-input-ret").on("change", function () {
+                if ($("#node-input-ret").val() === "obj") {
+                    $("#tip-json").show();
+                } else {
+                    $("#tip-json").hide();
+                }
+            });
+            $('#node-input-user').val(this.user);
+            $('#node-input-password').val(this.password);
+            $('#node-input-token').val(this.token);
+        },
+        oneditsave: function () {
+            this.user = $('#node-input-user').val();
+            this.password = $('#node-input-password').val();
+            this.token = $('#node-input-token').val();
+        }
+    });
+</script>

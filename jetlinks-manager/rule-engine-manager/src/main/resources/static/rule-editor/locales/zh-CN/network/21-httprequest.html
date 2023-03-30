@@ -1,0 +1,62 @@
+<!--
+  Copyright JS Foundation and other contributors, http://js.foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-help-name="http request">
+    <p>发送HTTP请求并返回响应。</p>
+
+    <h3>输入</h3>
+    <dl class="message-properties">
+        <dt class="optional">url <span class="property-type">字符串</span></dt>
+        <dd>如果未在节点中配置，则此可选属性设置请求的url。如果不包含<code>http(s)://</code>前缀,则使用节点配置中到url作为请求根路径。</dd>
+        <dt class="optional">method <span class="property-type">字符串</span></dt>
+        <dd>如果未在节点中配置，则此可选属性设置请求的HTTP方法。必须是<code>GET</code>,<code>PUT</code>,<code>POST</code>,<code>PATCH</code>或<code>DELETE</code>之一。</dd>
+        <dt class="optional">headers <span class="property-type">object</span></dt>
+        <dd>设置请求的HTTP头，JSON对象格式: {"header":"value","header2":"value"}</dd>
+        <dt class="optional">cookies <span class="property-type">object</span></dt>
+        <dd>如果设置，则可用于发送带有请求的cookie。</dd>
+        <dt class="optional">queryParameters  <span class="property-type">object</span></dt>
+        <dd>查询参数,将直接拼接到url中,如: <code>getData?id=test</code>。</dd>
+        <dt class="optional">requestParam  <span class="property-type">object</span></dt>
+        <dd>使用<code>application/x-www-form-urlencoded</code>时发起请求时到参数,如果未指定则使用payload.</dd>
+        <dt class="optional">payload</dt>
+        <dd>发送为请求的正文。</dd>
+        <dt class="optional">requestTimeout</dt>
+        <dd>设置请求超时时间,单位:毫秒</dd>
+    </dl>
+    <h3>输出</h3>
+    <dl class="message-properties">
+        <dt>contentType <span class="property-type">字符串</span></dt>
+        <dd>响应类型,如: application/json。</dd>
+        <dt>payload <span class="property-type">字符串 | object | bytes</span></dt>
+        <dd>响应的正文。与响应类型对应,类型如果是<code>application/json</code>则自动将响应正文转换为json对象。</dd>
+        <dt>status <span class="property-type">数值</span></dt>
+        <dd>响应的状态码，如果请求无法完成，则返回错误码。</dd>
+        <dt>headers <span class="property-type">object</span></dt>
+        <dd>响应头对象。</dd>
+    </dl>
+    <h3>详细</h3>
+    <p>在节点内配置后，URL属性可以包含表达式。 这些标签允许使用传入消息的值来构造url。例如，如果url设置为<code>example.com/${topic}</code>，它将自动插入<code>data.topic</code>的值。</p>
+    <p>节点可以选择自动将<code>data.payload</code>编码为GET请求的查询字符串参数，在这种情况下，<code>data.payload</code>必须是一个对象。</p>
+    <h4>Cookie处理</h4>
+    <p>传递给节点的<code>cookies</code>属性必须是‘名称/值’键值对的对象。该值可以是设置cookie值的字符串，也可以是具有单个<code>value</code>属性的对象。</p>
+    <p>请求返回的所有cookie都将在<code>responseCookies</code>属性下传递回去。</p>
+    <h4>内容类型处理</h4>
+    <p>如果<code>data.payload</code>是一个对象，则节点将自动将请求的内容类型设置为<code>application/json</code>并对其进行编码。</p>
+    <p>要将请求编码为表单数据，应将<code>data.headers["Content-Type"]</code>设置为<code>application/x-www-form-urlencoded</code>。</p>
+    <h4>文件上传</h4>
+    <p>暂时不支持文件上传</p>
+    
+</script>
